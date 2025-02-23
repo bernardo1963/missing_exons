@@ -1,0 +1,28 @@
+REM Fig5_graph.syc  Tue Feb  4 09:22:03 -03 2025
+import D:\ABC\projetos\Bernard_Kim\nanopore_missing\ms\figures\fig5\Fig5_data.txt  / TYPE=ASCII
+ESAVE  D:\ABC\projetos\Bernard_Kim\nanopore_missing\ms\figures\fig5\Fig5_data.syz
+use D:\ABC\projetos\Bernard_Kim\nanopore_missing\ms\figures\fig5\Fig5_data.syz
+REM CCY_exon2 R
+BEGIN
+select gene$="CCY_exon2" AND strand$="R"
+fplot y=UCF(x,0,3640)+UCF(x,0,5802)+UCF(x,0,5092)+UCF(x,0,10177)+UCF(x,0,15223)+UCF(x,0,21032)+UCF(x,0,19424)+UCF(x,0,29532)+UCF(x,0,81449)+UCF(x,0,81290); xmin=0 xmax=79000 Xlabel="" Ylabel="" color=red ymin=0 ymax=11
+plot cum_count*s_start / Xlabel=" Position in read (bp)" Ylabel=" Cumulative count" symbol=1 size=0.75 fill=1 ymin=0 xmin=0 ymax=11 xmax=79000
+END
+REM Pp1Y1 R
+BEGIN
+select gene$="Pp1Y1" AND strand$="R"
+fplot y=UCF(x,0,44141)+UCF(x,0,23106)+UCF(x,0,32762)+UCF(x,0,2935)+UCF(x,0,13759)+UCF(x,0,13605)+UCF(x,0,3093)+UCF(x,0,11919)+UCF(x,0,22131)+UCF(x,0,4721)+UCF(x,0,65699)+UCF(x,0,16299)+UCF(x,0,44841)+UCF(x,0,5588)+UCF(x,0,53294)+UCF(x,0,6564)+UCF(x,0,28729)+UCF(x,0,34499)+UCF(x,0,7326)+UCF(x,0,9122)+UCF(x,0,11369)+UCF(x,0,56261)+UCF(x,0,47181)+UCF(x,0,17252)+UCF(x,0,10809)+UCF(x,0,48163)+UCF(x,0,40680)+UCF(x,0,14328)+UCF(x,0,14466)+UCF(x,0,11689)+UCF(x,0,50357)+UCF(x,0,28895)+UCF(x,0,31567)+UCF(x,0,67061)+UCF(x,0,22665)+UCF(x,0,32950)+UCF(x,0,27787)+UCF(x,0,29952)+UCF(x,0,20335)+UCF(x,0,79692)+UCF(x,0,20792)+UCF(x,0,22632)+UCF(x,0,31231)+UCF(x,0,27561)+UCF(x,0,19339)+UCF(x,0,31890)+UCF(x,0,22214)+UCF(x,0,27452)+UCF(x,0,22213)+UCF(x,0,36897)+UCF(x,0,23393)+UCF(x,0,22695)+UCF(x,0,54611)+UCF(x,0,46265)+UCF(x,0,55603)+UCF(x,0,53065)+UCF(x,0,44137)+UCF(x,0,34718)+UCF(x,0,36553)+UCF(x,0,50546)+UCF(x,0,72915)+UCF(x,0,38498)+UCF(x,0,77318)+UCF(x,0,49938)+UCF(x,0,39439)+UCF(x,0,47973)+UCF(x,0,50484)+UCF(x,0,49871)+UCF(x,0,73518)+UCF(x,0,60490)+UCF(x,0,58376)+UCF(x,0,55943)+UCF(x,0,67959)+UCF(x,0,83136)+UCF(x,0,66262)+UCF(x,0,68681); xmin=0 xmax=64000 Xlabel="" Ylabel="" color=red ymin=0 ymax=77
+plot cum_count*s_start / Xlabel=" Position in read (bp)" Ylabel=" Cumulative count" symbol=1 size=0.75 fill=1 ymin=0 xmin=0 ymax=77 xmax=64000
+END
+REM kl5_exon_3-9 R
+BEGIN
+select gene$="kl5_exon_3-9" AND strand$="R"
+fplot y=UCF(x,0,6720)+UCF(x,0,4685)+UCF(x,0,4422)+UCF(x,0,2264)+UCF(x,0,2095)+UCF(x,0,8754)+UCF(x,0,8103)+UCF(x,0,10278)+UCF(x,0,9584); xmin=0 xmax=3000 Xlabel="" Ylabel="" color=red ymin=0 ymax=10
+plot cum_count*s_start / Xlabel=" Position in read (bp)" Ylabel=" Cumulative count" symbol=1 size=0.75 fill=1 ymin=0 xmin=0 ymax=10 xmax=3000
+END
+REM PprY_exon3 R
+BEGIN
+select gene$="PprY_exon3" AND strand$="R"
+fplot y=UCF(x,0,1202)+UCF(x,0,3665)+UCF(x,0,4167)+UCF(x,0,10796)+UCF(x,0,13464)+UCF(x,0,15931)+UCF(x,0,16179)+UCF(x,0,32120)+UCF(x,0,25022)+UCF(x,0,24260)+UCF(x,0,22033)+UCF(x,0,25010)+UCF(x,0,30217)+UCF(x,0,29926)+UCF(x,0,43780); xmin=0 xmax=43000 Xlabel="" Ylabel="" color=red ymin=0 ymax=16
+plot cum_count*s_start / Xlabel=" Position in read (bp)" Ylabel=" Cumulative count" symbol=1 size=0.75 fill=1 ymin=0 xmin=0 ymax=16 xmax=43000
+END
