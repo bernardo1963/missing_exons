@@ -6,7 +6,7 @@ This repository contains supplementary files for the study **"Strong sequencing 
 The repository is organized into three main directories:
 
 ### **Fasta/** – Assembled Contigs and Reference Sequences  
-This directory contains FASTA files with assembled "missing exons" and reference sequences used in the study. The assembled contigs were generated from Nanopore long reads using **Minimap/Miniasm** followed by **Racon polishing**. Reference sequences include Y-linked exons and satellite DNA.
+This directory contains FASTA files with assembled "missing exons" and reference sequences used in the study. Reference sequences include Y-linked exons and satellite DNA.
 
 ### **Scripts/** – Data Processing and Analysis Scripts  
 This directory includes **Python, AWK, and Shell scripts** used for read coverage computation, statistical tests, and visualization. 
