@@ -52,7 +52,7 @@ END{
 	}
 
 
-# desired gnuplot commnads
+# desired gnuplot commands
 
 # set terminal svg
 # set output 'arrows.svg'
