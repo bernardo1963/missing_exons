@@ -6,7 +6,9 @@ This folder contains scripts used for data processing, statistical analysis, and
 
 ### Data Processing & Analysis
 - **`missingExon_stat_1jan2025.py`**  
-- **`read_coverage_CDS_v4.py`**  
+- **`read_coverage_CDS_v4.py`**
+- **`AnDarl.c`** - C implementation of the Anderson-Darling test for uniformity (original version by Marsaglia).
+- **`AnDarl_modified.c`** - Modified version of `AnDarl.c` that allows command-line parameter input for easier integration with Python scripts.
 
 ### Visualization Scripts
 - **`box_violin_plot.py`**  
