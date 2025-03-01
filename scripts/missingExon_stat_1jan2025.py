@@ -2,14 +2,13 @@
 #
 # missingExon_stat_26dez2024.py  based on missingExon_stat.py v1.0  Bernardo/Fabiana dez2024
 
-# new in v  1jan2025: implements Anderson-Darling test with composit null hypothesis (sum of uniform distribuitions); correected the Kolomogoriv_Smirnov function to composite_cdf += stats.uniform.cdf(curr_start,0,size)  (I was using composite_cdf += stats.uniform.cdf(curr_start,1,size) 
-# new in v 30dez2024: implements Kolmogorov-Smirnov test with composit null hypothesis (sum of uniform distribuitions)
-# new in v 29dez2024: implements mad (Median Aabsolute Deviation) as a robust alternative to variance
-# new in v 28dez2024: default offset is 0 (before 27dez was 20, hard coded); implememted --m8mod 
-# new in v 27dez2024: argparse; implemented control  of max_readsize 
-# new in v 26dez2024: implememnts start variance analysis in the R reads.
-# new in v 25dez2024: implememnts Fishers methos for the variance as well, isnbtaread of thadding the SS and df Reaso: somemgenes hmI want a two-tailed test of variance and some genes may be in one tail, others in thelother tail fo teh F-test, and tehir beffects might conceal e
-# usage: missingExon_stat_24dez2024.py  YX_read_data_23dez2024.txt
+# new in v  1jan2025: implements Implements Anderson-Darling test with a composite null hypothesis (sum of uniform distributions); Corrected the Kolmogorov-Smirnov function to `composite_cdf += stats.uniform.cdf(curr_start, 0, size)` (previously, it incorrectly used `composite_cdf += stats.uniform.cdf(curr_start, 1, size)`). 
+# new in v 30dez2024: Implements Kolmogorov-Smirnov test with a composite null hypothesis (sum of uniform distributions).
+# new in v 29dez2024: Implements MAD (Median Absolute Deviation) as a robust alternative to variance.
+# new in v 28dez2024: Default offset is now 0 (previously hardcoded as 20 before Dec 27); Implemented `--m8mod` option.
+# new in v 27dez2024: Added argparse support. Implemented control for `max_readsize`.
+# new in v 26dez2024: Implements start variance analysis in the R reads.
+# new in v 25dez2024: Implements Fisher's method for variance instead of summing SS and df. Reason: Some genes require a two-tailed variance test, and individual genes may fall into opposite tails of the F-test. Their effects could cancel each other out, concealing significant variance patterns.
 
 # This script reads an input file with data on forward (F) and reverse (R) read counts for different genes, performs a binomial test on each gene to see if the observed F vs. R ratio deviates significantly from 50:50, and then combines the resulting p-values from all genes using Fisher’s combined probability test
 #
@@ -96,7 +95,8 @@ def F_R_usage_stats(FR_dict):
             F_reads = FR_dict[gene,"F"]
             R_reads = FR_dict[gene,"R"]
             n_reads = F_reads + R_reads
-            # STEP 1. Perform binomial test for each gene    null hypothesis: p=0.5               
+            # STEP 1. Perform binomial test for each gene    
+            # null hypothesis: p=0.5               
             # binomtest returns a result object (test_res), which includes the pvalue.
             test_res = binomtest(k=F_reads, n=n_reads, p=0.5)
             # extracting the p-value
@@ -154,7 +154,8 @@ def read_start_stats():
                 # print(gene, "start_list_trimmed:", start_list_trimmed)
                 
                 # expected_unif_variance = ((max_size_F -1)**2) / 12  # https://en.wikipedia.org/wiki/Continuous_uniform_distribution
-                #below I removed 20 becasue this is the approx minimun aln length to be deteced in blast. A reads that finishes in the fisrt base of the cds will not be detected. 
+                # Below, I removed 20 because this is approximately the minimum alignment length required to be detected in BLAST. 
+                # A read that terminates at the first base of the CDS will not be detected. 
                 # expected_unif_variance = ((max_size -1 -20)**2) / 12  # https://en.wikipedia.org/wiki/Continuous_uniform_distribution
                 expected_unif_variance = ((10000 -1 -20)**2) / 12  # https://en.wikipedia.org/wiki/Continuous_uniform_distribution
                 
@@ -210,8 +211,8 @@ def Kolmogorov_Smirnov():  # Kolmogorov-Smirnov test with composit null hypothes
                     curr_start = start_list_sorted[i]
                     composite_cdf = 0
                     for size in size_list:
-                        composite_cdf += stats.uniform.cdf(curr_start,0,size)  #  # ideally sgould use a discrete distribuition. But rsult is the same, IU think 
-                    KS_diff = abs(i - composite_cdf) / n_reads   # KS stats came from a cdf ( max=1)
+                        composite_cdf += stats.uniform.cdf(curr_start,0,size)   
+                    KS_diff = abs(i - composite_cdf) / n_reads   
                     KS_diff_list.append(KS_diff) 
                 KS_stats = max(KS_diff_list)
                 # print("KS_stats:", KS_stats , "n_reads:",n_reads, flush=True)
@@ -245,7 +246,7 @@ def Kolmogorov_Smirnov():  # Kolmogorov-Smirnov test with composit null hypothes
 
 
 
-def Anderson_Darling_2():  # This is the standard Anderson-Darling test, w/ p value obtained with Marsaglia and Marsaglia C-code
+def Anderson_Darling_2():  # This is the standard Anderson-Darling test, with p value obtained with Marsaglia and Marsaglia C-code
     # https://www.spcforexcel.com/knowledge/basic-statistics/anderson-darling-test-for-normality/
     # from https://www.6sigma.us/six-sigma-in-focus/anderson-darling-normality-test/
     # A^2 = -n – (1/n) * Sum[(2i – 1) * (ln(Φ(x(i))) + ln(1 – Φ(x(n+1-i)))]
@@ -335,7 +336,7 @@ def Anderson_Darling_2():  # This is the standard Anderson-Darling test, w/ p va
 
 
 
-def Anderson_Darling_2_old():  # This is the standard Anderson-Darling test, w/ p val;ued obtained with Marsaglia and Marsaglia C-code
+def Anderson_Darling_2_old():  # This is the standard Anderson-Darling test, with p-values obtained using the Marsaglia and Marsaglia C code.
     # https://www.spcforexcel.com/knowledge/basic-statistics/anderson-darling-test-for-normality/
     # from https://www.6sigma.us/six-sigma-in-focus/anderson-darling-normality-test/
     # A^2 = -n – (1/n) * Sum[(2i – 1) * (ln(Φ(x(i))) + ln(1 – Φ(x(n+1-i)))]
@@ -366,7 +367,7 @@ def Anderson_Darling_2_old():  # This is the standard Anderson-Darling test, w/ 
                     curr_start = start_list_sorted[i]
                     composite_cdf = 0
                     for size in size_list:
-                        composite_cdf += stats.uniform.cdf(curr_start,0,size) / n_reads   # ideally sgould use a discrete distribuition. But rsult is the same, IU think
+                        composite_cdf += stats.uniform.cdf(curr_start,0,size) / n_reads   
                     composite_cdf_list.append(composite_cdf)
                     complementary_composite_cdf_list.append(1 -composite_cdf ) 
                 # sorting complementary_composite_cdf_list
