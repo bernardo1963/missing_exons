@@ -162,7 +162,7 @@ def read_start_stats():
                 # F two-tailed test https://www.geeksforgeeks.org/how-to-perform-an-f-test-in-python/
                 f_value = var_start  / expected_unif_variance
                 if var_start  >= expected_unif_variance:
-                    p_val = ( 1 - stats.f.cdf(f_value , df_start , 100000) ) *2  # I used 100000 to emmulate infinite df  I think this is equivalent to a  chi-square
+                    p_val = ( 1 - stats.f.cdf(f_value , df_start , 100000) ) *2  # Approximating an infinite degrees of freedom scenario using df=100,000 
                 else:
                     p_val = (stats.f.cdf(f_value , df_start, 100000) ) *2           
                 p_values.append(p_val)
