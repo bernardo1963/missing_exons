@@ -5,21 +5,21 @@ This folder contains scripts used for data processing, statistical analysis, and
 ## Files
 
 ### Data Processing & Analysis
-- **`missingExon_stat_1jan2025.py`**  
-- **`read_coverage_CDS_v4.py`**
+- **`missingExon_stat_1jan2025.py`**  - Statistical analysis of missing exons, including variance tests and the Anderson-Darling test.
+- **`read_coverage_CDS_v4.py`** - Computes read coverage across coding sequences.
 - **`AnDarl.c`** - C implementation of the Anderson-Darling test for uniformity (original version by Marsaglia).
 - **`AnDarl_modified.c`** - Modified version of `AnDarl.c` that allows command-line parameter input for easier integration with Python scripts.
 
 ### Visualization Scripts
-- **`box_violin_plot.py`**  
-- **`visualize_repeats_censor.py`**  
+- **`box_violin_plot.py`**  - Generates box and violin plots for data visualization.
+- **`visualize_repeats_censor.py`**  - Visualizes repetitive elements detected using `censor`.
 
 ### Figure Generation
-- **`Fig5_graph.syc`**  
-- **`figures_tables_scripts.sh`**  
+- **`Fig5_graph.syc`**  - Script for plotting data related to Figure 5.
+- **`figures_tables_scripts.sh`**  - Shell script for processing figures and tables.
 
 ### Read Coverage Processing
-- **`fplot_reads.awk`**  
+- **`fplot_reads.awk`**  - AWK script for plotting read distributions.
 
 ## Usage
 
@@ -41,4 +41,21 @@ To compile and use the original version:
 ```bash
 gcc AnDarl.c -lm -o AnDarl
 ./AnDarl  # Interactive mode, requires manual input of n and z
+```
 
+Example interactive session:
+```bash
+# Enter n and z: 100 0.9
+Prob(A_100 <  0.9000)=  0.58603
+```
+
+To compile and use the modified version:
+```bash
+gcc AnDarl_modified.c -lm -o AnDarl_modified
+./AnDarl_modified 100 0.9  # Example with n=100, z=0.9
+```
+
+Example output
+```bash
+Prob(A_100 <  0.9000)=0.586025560369086
+```
