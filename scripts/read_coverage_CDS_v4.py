@@ -150,7 +150,7 @@ def parse_blast_m8_with_identity(blast_file):
     CDS_found_set = set()
     coverage_dict = {}  # per base
     if args.rosetta != "":
-        category_coverage_dict = {}  # will store one list of coverages for each gene category (eg, chromn) 
+        category_coverage_dict = {}  # will store one list of coverages for each gene category (e.g. chrom) 
         category_count_dict = {}
         for gene_category in category_set:
             category_coverage_dict[gene_category] = [] 
