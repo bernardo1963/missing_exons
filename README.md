@@ -8,7 +8,7 @@ The repository is organized into three main directories:
 ### **Fasta/** – Assembled Contigs and Reference Sequences  
 This directory contains FASTA files with assembled "missing exons" and reference sequences used in the study. Reference sequences include Y-linked exons and satellite DNA.
 
-### **Scripts/** – Data Processing and Analysis Scripts  
+### **Scripts/** – Data Processing and Analysis Scripts (Supplemental Code)
 This directory includes **Python, AWK, and Shell scripts** used for read coverage computation, statistical tests, and visualization. 
 
 ### **Data/** – Processed Data for Figures and Tables  
