@@ -18,7 +18,6 @@ This folder contains scripts used for data processing, statistical analysis, and
 
 ### Figure Generation
 - [`Fig5_graph.syc`](Fig5_graph.syc) - Script for plotting data related to Figure 5.
-- [`figures_tables_scripts.sh`](figures_tables_scripts.sh) - Shell script for processing figures and tables.
 
 ### File Processing & Utilities
 - [`fasta_size.awk`](fasta_size.awk) - AWK script to count the length of sequences in multiple FASTA files and produce a summary table.
@@ -28,6 +27,11 @@ This folder contains scripts used for data processing, statistical analysis, and
 ### Assembly Quality Assessment
 - [`Ycompleteness_v3.sh`](Ycompleteness_v3.sh) - Tests completeness of genes (usually Y-linked) in assemblies using BLAST searches with customizable parameters and produces tabular output for comparison.
 
+## Complete Analysis Workflow
+
+### Reproducible Research Pipeline
+- **[`Supplemental_Code.sh`](Supplemental_Code.sh)** - Complete computational workflow to reproduce all figures, tables, and results from the manuscript. This shell script provides exact command lines, parameters, and data processing steps used in the study "Strong bias in long-read sequencing prevents assembly of Drosophila melanogaster Y-linked genes."
+  
 ## Usage
 
 Each script includes internal documentation or comments. Run scripts using **Python**, **AWK**, **Shell**, or **C** as appropriate.
