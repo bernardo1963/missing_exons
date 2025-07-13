@@ -100,22 +100,4 @@ Prob(A_100 <  0.9000)=0.586025560369086
 - **gnuplot**: Required for read visualization ([`fplot_reads.awk`](fplot_reads.awk))
 - **gcc**: Required for compiling Anderson-Darling test programs
 
-## Key Features
 
-### Statistical Analysis
-- Binomial tests for strand bias analysis
-- Fisher's combined probability tests
-- Anderson-Darling tests for uniformity
-- Coverage statistics with smoothing
-
-### Visualization
-- Customizable box and violin plots
-- Read coverage plots with exon overlays
-- Repeat element visualization
-- Assembly completeness comparisons
-
-### File Processing
-- FASTA sequence analysis
-- BLAST output parsing
-- Repeat annotation processing
-- Multi-format output support (SVG, PNG, PDF)
