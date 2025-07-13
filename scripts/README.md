@@ -5,25 +5,54 @@ This folder contains scripts used for data processing, statistical analysis, and
 ## Files
 
 ### Data Processing & Analysis
-- **`missingExon_stat_1jan2025.py`**  - Statistical analysis of missing exons, including variance tests and the Anderson-Darling test.
-- **`read_coverage_CDS_v4.py`** - Computes read coverage across coding sequences.
-- **`AnDarl.c`** - C implementation of the Anderson-Darling test for uniformity (original version by Marsaglia).
-- **`AnDarl_modified.c`** - Modified version of `AnDarl.c` that allows command-line parameter input for easier integration with Python scripts.
+- [`missingExon_stat_1jan2025.py`](missingExon_stat_1jan2025.py) - Statistical analysis of missing exons, including variance tests and the Anderson-Darling test.
+- [`missingExon_stat.py`](missingExon_stat.py) - Performs binomial tests on forward vs. reverse read counts for different genes and combines p-values using Fisher's combined probability test.
+- [`missingExon_binomial_stat_v1.py`](missingExon_binomial_stat_v1.py) - Enhanced version that accepts expected probabilities (instead of fixed 50:50) and performs binomial tests with Fisher's combined probability analysis.
+- [`read_coverage_CDS_v6.py`](read_coverage_CDS_v6.py) - Computes read coverage across coding sequences with visualization capabilities, exon overlay support, and smoothing filters.
+- [`simple_satellite_detector.py`](simple_satellite_detector.py) - Detects satellite DNA sequences in reads using regex pattern matching with support for rotations and reverse complements.
+- [`AnDarl.c`](AnDarl.c) - C implementation of the Anderson-Darling test for uniformity (original version by Marsaglia).
+- [`AnDarl_modified.c`](AnDarl_modified.c) - Modified version of `AnDarl.c` that allows command-line parameter input for easier integration with Python scripts.
 
 ### Visualization Scripts
-- **`box_violin_plot.py`**  - Generates box and violin plots for data visualization.
-- **`visualize_repeats_censor.py`**  - Visualizes repetitive elements detected using `censor`.
+- [`box_violin_plot.py`](box_violin_plot.py) - Generates box and violin plots for read size distributions across different genes using matplotlib and seaborn.
+- [`visualize_repeats_censor4.py`](visualize_repeats_censor4.py) - Visualizes repetitive elements detected using `censor` with support for custom gene/repeat classification, exon overlays, and detailed composition statistics.
 
 ### Figure Generation
-- **`Fig5_graph.syc`**  - Script for plotting data related to Figure 5.
-- **`figures_tables_scripts.sh`**  - Shell script for processing figures and tables.
+- [`Fig5_graph.syc`](Fig5_graph.syc) - Script for plotting data related to Figure 5.
+- [`figures_tables_scripts.sh`](figures_tables_scripts.sh) - Shell script for processing figures and tables.
 
-### Read Coverage Processing
-- **`fplot_reads.awk`**  - AWK script for plotting read distributions.
+### File Processing & Utilities
+- [`fasta_size.awk`](fasta_size.awk) - AWK script to count the length of sequences in multiple FASTA files and produce a summary table.
+- [`fplot_reads.awk`](fplot_reads.awk) - AWK script for plotting read distributions and generating gnuplot scripts to visualize reads as arrows.
+- [`process_nonB_gfa.awk`](process_nonB_gfa.awk) - Processes non-B DNA structure analysis output files and generates summary tables or raw data output.
+
+### Assembly Quality Assessment
+- [`Ycompleteness_v3.sh`](Ycompleteness_v3.sh) - Tests completeness of genes (usually Y-linked) in assemblies using BLAST searches with customizable parameters and produces tabular output for comparison.
 
 ## Usage
 
-Each script includes internal documentation or comments. Run scripts using **Python**, **AWK**, or **Shell** as appropriate.
+Each script includes internal documentation or comments. Run scripts using **Python**, **AWK**, **Shell**, or **C** as appropriate.
+
+### Python Scripts
+Most Python scripts accept command-line arguments. Use `--help` to see available options:
+```bash
+python script_name.py --help
+```
+
+### AWK Scripts
+Run AWK scripts directly on input files:
+```bash
+./script_name.awk input_file
+# or
+gawk -f script_name.awk input_file
+```
+
+### Shell Scripts
+Make executable and run with appropriate parameters:
+```bash
+chmod +x script_name.sh
+./script_name.sh [options] input_files
+```
 
 ## Anderson-Darling Test Implementation
 
@@ -55,7 +84,38 @@ gcc AnDarl_modified.c -lm -o AnDarl_modified
 ./AnDarl_modified 100 0.9  # Example with n=100, z=0.9
 ```
 
-Example output
+Example output:
 ```bash
 Prob(A_100 <  0.9000)=0.586025560369086
 ```
+
+## Dependencies
+
+### Python Scripts
+- **Required packages**: `pandas`, `matplotlib`, `seaborn`, `scipy`, `numpy`, `Bio` (Biopython)
+- **Python version**: 3.7+ (some scripts specify 3.9+)
+
+### External Tools
+- **BLAST**: Required for assembly completeness analysis ([`Ycompleteness_v3.sh`](Ycompleteness_v3.sh))
+- **gnuplot**: Required for read visualization ([`fplot_reads.awk`](fplot_reads.awk))
+- **gcc**: Required for compiling Anderson-Darling test programs
+
+## Key Features
+
+### Statistical Analysis
+- Binomial tests for strand bias analysis
+- Fisher's combined probability tests
+- Anderson-Darling tests for uniformity
+- Coverage statistics with smoothing
+
+### Visualization
+- Customizable box and violin plots
+- Read coverage plots with exon overlays
+- Repeat element visualization
+- Assembly completeness comparisons
+
+### File Processing
+- FASTA sequence analysis
+- BLAST output parsing
+- Repeat annotation processing
+- Multi-format output support (SVG, PNG, PDF)
