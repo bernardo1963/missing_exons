@@ -14,7 +14,7 @@ This folder contains scripts used for data processing, statistical analysis, and
 
 ### Visualization Scripts
 - [`box_violin_plot.py`](box_violin_plot.py) - Generates box and violin plots for read size distributions across different genes using matplotlib and seaborn.
-- [`visualize_repeats_censor4.py`](visualize_repeats_censor4.py) - Visualizes repetitive elements detected using `censor` with support for custom gene/repeat classification, exon overlays, and detailed composition statistics.
+- [`visualize_repeats_censor5.py`](visualize_repeats_censor4.py) - Visualizes repetitive elements detected using `censor` with support for custom gene/repeat classification, exon overlays, and detailed composition statistics.
 
 ### Figure Generation
 - [`Fig5_graph.syc`](Fig5_graph.syc) - Script for plotting data related to Figure 5.
