@@ -1,12 +1,14 @@
-#!/usr/bin/python3.9 -u
-# #!/usr/local/bin/python3.9 -u
-# read_coverage_CDS_v6.py   based on digital_kennison_v9.py    Bernardo   moj_Y and nanopore_missing projects   v. 15may2025
+#!/usr/bin/python3 -u
+# read_coverage_CDS_v6.py   based on digital_kennison_v9.py    Bernardo   moj_Y and nanopore_missing projects   v. 20jul2025
 # new in v2: serious bug correction;  implement option --m8_file
 # -F "m S"
 # new in v4: Generate a depth vs. position plot for each gene using matplotlib; Apply a rolling median filter to smooth out spikes
 # new in v5:  Added --cds_file and --cds_Yaxis parameters for exon visualization
 # new in v6    proportional Y-axis position where exon lines will be displayed (default: 5.0, meaning Y=5 in a graph with Ymax=100). <mantains exons at vthe same relatve position in the graphs 
 # 15may2025 version: new option --Xlabel gene_name   new parameter --select_fasta
+# 20jul2025: I put the full path of wu-blast, there is another blastn interferring  /home6/tools/wu_blast
+# 24ago2025  added plt.rcParams['svg.fonttype'] = 'none'    plt.rcParams['pdf.fonttype'] = 42 plt.rcParams['ps.fonttype'] = 42   . added --axes_fontsize  --exon_linewd --label_fontsize
+  
 import os
 import subprocess
 import logging
@@ -18,6 +20,10 @@ import statistics
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+# below: see https://stackoverflow.com/questions/54101529/how-can-i-export-a-matplotlib-figure-as-a-vector-graphic-with-editable-text-fiel 
+plt.rcParams['svg.fonttype'] = 'none'
+plt.rcParams['pdf.fonttype'] = 42 
+plt.rcParams['ps.fonttype'] = 42
 
 def get_parameters():
     global effective_fasta_file
@@ -43,16 +49,21 @@ def get_parameters():
     # parser.add_argument("--Xmax", type=int, default=0, help="Xmax value")
     parser.add_argument("--Ymin", type=float, default=0, help="Xmin value")
     parser.add_argument("--Ymax", type=float, default=-1, help="Ymax value")
-    parser.add_argument('--Xlabel', type=str, default='CDS position (bp)', help='label of the X-axis. deafult is "CDS position (bp)" . gene_name will put something like "position in AMPdean-RC HiFi" ')    
+    parser.add_argument('--Xlabel', type=str, default='CDS position (bp)', help='label of the X-axis. deafult is "CDS position (bp)" . gene_name will put something like "position in AMPdean-RC HiFi"')    
     parser.add_argument('--Ylabel', type=str, default='Coverage', help='label of the Y-axis')
+    parser.add_argument("--label_fontsize", type=float, default=10, help="font size of the axes labels")
+    parser.add_argument("--scale_fontsize", type=int, default=10, help="font size of the X and Y axes scales")
     parser.add_argument('--select_fasta', type=str, default='', help='only process a subset of fasta ("Myo81F-RB Mitf-RA" ) ')
     # NEW PARAMETERS FOR EXON VISUALIZATION
     parser.add_argument('--cds_file', type=str, default='', help='optional file containing exon positions (start end exon_id) to display on the plot')
     parser.add_argument('--cds_Yaxis', type=float, default=5.0, help='proportional Y-axis position where exon lines will be displayed (default: 5.0, meaning Y=5 in a graph with Ymax=100)')
     parser.add_argument("--exon_fontsize", type=int, default=8, help="font size of the exon labels")
     parser.add_argument("--exon_fontweight", type=str, default='normal', help="font weight of the exon labels   normal/bold/heavy/light/ultrabold/ultralight")
-    parser.add_argument("--graph_format", type=str, default='png' ,  help="output graph  format: png/pdf/svg/eps")
+    parser.add_argument("--exon_linewd", type=float, default=2, help="exon line width (default: 2) " )
+    parser.add_argument('--skip_even_exons_labels', type=str, default='no', help='only prints odd exon lables (1,3,5...) to reduce cluttering ')
     parser.add_argument("--linewidth", type=float, default=1.5, help="linewidth of the coverage data")
+   
+    parser.add_argument("--graph_format", type=str, default='png' ,  help="output graph  format: png/pdf/svg/eps")
     parser.add_argument("--output", default="", type=str, help="graph output file for visualization. File extension dtermines formnat PNG/PDF/SVG. Overrides --graph_name_suffix and --graph_format ")
 
 
@@ -180,7 +191,7 @@ def run_wu_blast(fasta_file, db, blast_output_file):
     """Runs wu-blast against a given database and saves the output in m8 format."""
     WU_bls_output = re.sub("\..*$","",args.systat_output_file) + ".wu-bls"
 
-    blast_cmd_str = "blastn " + db + " " + fasta_file   + " -o " + WU_bls_output +  "  mformat=2   -novalidctxok -nonnegok -gapall -restest  Q=7 R=2 kap M=1 N=-3 W=11    S2=14 gapS2=19 X=6 gapX=15 gapW=12    -gi  gapL=1.3741 gapK=0.711 gapH=1.3073 " + args.wu_blast_parameters  # default args.wu_blast_parameters: ' E=0.001 filter=dust -wordmask dust  V=100000 B=100000   hspmax=0  cpus=50 '
+    blast_cmd_str = "/home6/tools/wu_blast/blastn " + db + " " + fasta_file   + " -o " + WU_bls_output +  "  mformat=2   -novalidctxok -nonnegok -gapall -restest  Q=7 R=2 kap M=1 N=-3 W=11    S2=14 gapS2=19 X=6 gapX=15 gapW=12    -gi  gapL=1.3741 gapK=0.711 gapH=1.3073 " + args.wu_blast_parameters  # default args.wu_blast_parameters: ' E=0.001 filter=dust -wordmask dust  V=100000 B=100000   hspmax=0  cpus=50 '
     print(blast_cmd_str, flush=True)
 
     awk_cmd_string = ' awk \'BEGIN{OFS="\t"};{print $1,$2,$11,$7,$10,$13,$18,$19,$21,$22,$3,$5}\'  ' + WU_bls_output + ' > ' + blast_output_file
@@ -376,6 +387,7 @@ def plot_gene_coverage_with_smoothing(systat_output_file, window_size):
         df['smoothed_depth'] = 0
         for gene in df['gene$'].unique():
             gene_df = df[df['gene$'] == gene].copy()
+            df['smoothed_depth'] = df['smoothed_depth'].astype(float)  # new in 11ago2025  to avoid warning  
             gene_df['smoothed_depth'] = gene_df['depth'].rolling(window=window_size, center=True, min_periods=1).median()
             df.loc[df['gene$'] == gene, 'smoothed_depth'] = gene_df['smoothed_depth']
 
@@ -397,37 +409,18 @@ def plot_gene_coverage_with_smoothing(systat_output_file, window_size):
             # Plot the main coverage data
             plt.plot(gene_df['position'], gene_df['smoothed_depth'], marker='', linestyle='-', linewidth=args.linewidth, color='#005f99', label="Smoothed (Moving Median)")
             
-            '''
-            # Add exon visualization if CDS file is provided
-            if exons:
-                logging.info(f"Adding {len(exons)} exons to plot for gene {gene}")
-                
-                # Calculate vertical offset for each exon to prevent overlap
-                exon_height = 2.0  # Height of each exon line
-                base_y = args.cds_Yaxis
-                
-                for i, exon in enumerate(exons):
-                    # Calculate Y position with slight vertical offset for each exon
-                    # Odd-numbered exons (1,3,5...) go to higher position
-                    y_pos = base_y + ((i + 1) % 2) * exon_height  # Cycle through 2 levels
-                    
-                    # Draw the exon as a horizontal line
-                    plt.hlines(y=y_pos, xmin=exon['start']+4, xmax=exon['end']-4, 
-                              colors='black', linewidth=2, alpha=0.8)
-                    
-                    # Add exon label - all labels at the higher position
-                    label_y_pos = base_y + exon_height + 1  # All labels at higher position
-                    mid_point = (exon['start'] + exon['end']) / 2
-                    plt.text(mid_point, label_y_pos + 0.5, f"{exon['id']}", 
-                            ha='center', va='bottom', fontsize=8, fontweight='bold')
-            '''
-            # Set labels and formatting
+
+            #  Set fontsize of x-axis and y-axis tick labels
+            # plt.xticks(fontsize=args.scale_fontsize)
+            # plt.yticks(fontsize=args.scale_fontsize)  
+            plt.gca().tick_params(axis='both', which='major', labelsize=args.scale_fontsize)
+            # Set labels and formatting           
             if args.Xlabel != "gene_name":
-                plt.xlabel(args.Xlabel, fontsize=12)
+                plt.xlabel(args.Xlabel, fontsize=args.label_fontsize)
             else:
                 xlabel_2 = gene + " " + args.graph_name_suffix + "  (bp)"
-                plt.xlabel(xlabel_2, fontsize=12)
-            plt.ylabel(args.Ylabel, fontsize=12)
+                plt.xlabel(xlabel_2, fontsize=args.label_fontsize)
+            plt.ylabel(args.Ylabel, fontsize=args.label_fontsize)
             plt.grid(False)
 
             # Set x and y axis limits
@@ -436,9 +429,7 @@ def plot_gene_coverage_with_smoothing(systat_output_file, window_size):
                 plt.ylim(bottom=args.Ymin)
             else:
                 plt.ylim(args.Ymin, args.Ymax)
-
-            
-              
+          
             
             # Add exon visualization if CDS file is provided
             if exons:
@@ -459,7 +450,7 @@ def plot_gene_coverage_with_smoothing(systat_output_file, window_size):
                     
                     # Draw the exon as a horizontal line
                     plt.hlines(y=y_pos, xmin=exon['start']+4, xmax=exon['end']-4, 
-                              colors='black', linewidth=2, alpha=0.8)
+                              colors='black', linewidth=args.exon_linewd, alpha=0.8)
                     
                     # Add exon label - all labels at the higher position
                     # label_y_pos = base_y + exon_height + 1  # All labels at higher position
@@ -471,8 +462,8 @@ def plot_gene_coverage_with_smoothing(systat_output_file, window_size):
                     label_y_pos = ( base_y + exon_height + 1 ) * Yexon_scale  # All labels at higher position
                     
                     mid_point = (exon['start'] + exon['end']) / 2
-                    plt.text(mid_point, label_y_pos, f"{exon['id']}", 
-                            ha='center', va='bottom', fontsize=args.exon_fontsize, fontweight=args.exon_fontweight)
+                    if args.skip_even_exons_labels == 'no' or int(exon['id']) % 2 == 1 :
+                        plt.text(mid_point, label_y_pos, f"{exon['id']}", ha='center', va='bottom', fontsize=args.exon_fontsize, fontweight=args.exon_fontweight)
             
             # Adjust left and bottom spines to align with the border
             plt.gca().spines['left'].set_position(('outward', 0))
