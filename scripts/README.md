@@ -8,7 +8,7 @@ This folder contains scripts used for data processing, statistical analysis, and
 - [`missingExon_stat_1jan2025.py`](missingExon_stat_1jan2025.py) - Statistical analysis of missing exons, including binomial tests, variance analysis, Kolmogorov-Smirnov tests, and Anderson-Darling tests for uniformity. 
 - [`missingExon_binomial_stat_v1.py`](missingExon_binomial_stat_v1.py) - Enhanced version that accepts custom expected probabilities (instead of fixed 50:50) and performs binomial tests with Fisher's combined probability analysis.
 - [`read_coverage_CDS_v6.py`](read_coverage_CDS_v6.py) - Computes read coverage across coding sequences with visualization capabilities, exon overlay support, and smoothing filters.
-- [`simple_satellite_detector.py`](simple_satellite_detector.py) - Detects satellite DNA sequences in reads using regex pattern matching with support for rotations and reverse complements.
+- [`find_tandem_repeats_v2.py`](find_tandem_repeats_v2.py) - Detects and summarizes tandem repeats in DNA sequences, reporting their motifs, copy numbers, and positions
 - [`AnDarl.c`](AnDarl.c) - C implementation of the Anderson-Darling test for uniformity (original version by Marsaglia).
 - [`AnDarl_modified.c`](AnDarl_modified.c) - Modified version of `AnDarl.c` that allows command-line parameter input for easier integration with Python scripts.
 
