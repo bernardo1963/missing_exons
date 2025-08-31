@@ -1,111 +1,67 @@
-# Supplemental_Code.sh			version 24jun2025
+# Supplemental_Code.sh			version 30Aug2025
 # Essential computing codes to generate Figures, Tables, and Results from the ms.      
 # Strong bias in long-read sequencing prevents assembly of Drosophila melanogaster Y-linked genes
 # A. Bernardo Carvalho, Bernard Y. Kim, and Fabiana Uno
 
 # Related programs, scripts and data files are available at GitHub ( https://github.com/bernardo1963/missing_exons )
 
-step=Figure 1 19jun2025
+step=Figure 1 24aug2025
 {
 
 ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/intron_locations/kl3/kl3_RC_exon_boundaries.txt
 ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/intron_locations/kl3/kl3_RC_cds.fasta
 
-
 # PacBio CLR
-read_coverage_CDS_v6.py    --blast_pgm wu --db iso1_PacBio_CLR_WU  --fasta_file kl3_RC_cds.fasta --identity_cutoff 75 --window_size 12 --graph_name_suffix PacBioCLR_19jun2025 --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"   
+read_coverage_CDS_v6.py    --blast_pgm wu --db iso1_PacBio_CLR_WU  --fasta_file kl3_RC_cds.fasta --identity_cutoff 75 --window_size 12   --figsize_W 3.5 --figsize_H 1.75 --Xlabel "kl-3 CDS position (bp)"   --output  Fig_1A_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2 --skip_even_exons_labels yes  --Ylabel "PacBio CLR coverage"   
+
 # ONT (> 1kb)
-read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file kl3_RC_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix ONT_19jun2025 --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"
+read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file kl3_RC_cds.fasta --identity_cutoff 90 --window_size 12  --figsize_W 3.5 --figsize_H 1.75 --Xlabel "kl-3 CDS position (bp)"   --output  Fig_1B_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2 --skip_even_exons_labels yes  --Ylabel "ONT Q20+ coverage"   
+
 # HiFi
-read_coverage_CDS_v6.py --blast_pgm wu --db SRR29479668_WU --fasta_file kl3_RC_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix HiFi_19jun2025 --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"
-# Illumina  # will need to edit the lables of some exons (too close)
-read_coverage_CDS_v6.py --blast_pgm wu --db iso1_m_2024_WU --fasta_file kl3_RC_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix Illumina_19jun2025 --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"  --cds_file kl3_RC_exon_boundaries.txt  --output  kl-3-RC_cds_coverage_smoothed12_Illumina_19jun2025_edited.svg 
+read_coverage_CDS_v6.py --blast_pgm wu --db SRR29479668_WU --fasta_file kl3_RC_cds.fasta --identity_cutoff 90 --window_size 12    --figsize_W 3.5 --figsize_H 1.75 --Xlabel "kl-3 CDS position (bp)"   --output  Fig_1C_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2 --skip_even_exons_labels yes  --Ylabel "PacBio HiFi coverage"   
 
-rm *.idx  *.log *.aln  debug_log.txt CDS_coverage_systat*
+# Illumina 
+read_coverage_CDS_v6.py --blast_pgm wu --db iso1_m_2024_WU  --fasta_file kl3_RC_cds.fasta --identity_cutoff 90 --window_size 12   --figsize_W 3.5 --figsize_H 1.75 --Xlabel "kl-3 CDS position (bp)"  --cds_file kl3_RC_exon_boundaries.txt  --output  Fig_1D_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2 --skip_even_exons_labels yes  --Ylabel "Illumina coverage"   
+
+
+rm    CDS_coverage_systat*
+
 
 }
 
 
-step=Figure 2 19jun2025
+step=Figure 2 25aug2025
 {
-#######################   Figure 2 kl3 ##################
+# kl-3
+read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file kl3_RC_cds.fasta --identity_cutoff 90 --window_size 12  --Ymax 140 --cds_Yaxis 85    --figsize_W 3.5 --figsize_H 1.75 --Xlabel "kl-3 CDS position (bp)"  --cds_file kl3_RC_exon_boundaries.txt  --output  Fig2_kl3_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2 --skip_even_exons_labels yes  
 
-cd /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/reviewer3/point0_Fig2/
-ln -s ~/projects/mel_Y/assembly_evaluation/XY_coverage/intron_locations/kl3/kl3_RC_cds.fasta
-ln -s ~/projects/mel_Y/assembly_evaluation/XY_coverage/intron_locations/kl3/kl3_RC_exon_boundaries.txt
-
-# attempt2: increase Ymax, --cds_Yaxis to put exons at the top of the figure , svg output (to add blue/black arrows)
-read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file kl3_RC_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix ONT --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"  --cds_file kl3_RC_exon_boundaries.txt  --Ymax 130 --cds_Yaxis 90  --output kl3-RC_cds_coverage_smoothed12_ONT_19jun2025_edited.svg
-rm *.idx  *.log *.aln  debug_log.txt CDS_coverage_systat*
+# kl-5
+read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file kl5_cds.fasta --identity_cutoff 90 --window_size 12  --Ymax 180 --cds_Yaxis 85    --figsize_W 3.5 --figsize_H 1.75 --Xlabel "kl-5 CDS position (bp)"  --cds_file kl5_exon_boundaries.txt  --output  Fig2_kl5_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2 --skip_even_exons_labels yes  
 
 
-#######################   Figure 2 kl5 ##################
+# ORY
+read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file ORY_cds.fasta --identity_cutoff 90 --window_size 12  --Ymax 160 --cds_Yaxis 85    --figsize_W 3.5 --figsize_H 1.75 --Xlabel "ORY CDS position (bp)"  --cds_file ORY_exon_boundaries.txt  --output  Fig2_ORY_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2   
 
-ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/intron_locations/kl5/kl5_exon_boundaries.txt
-ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/reviewer1/point2_Fig3/kl5_cds.fasta
+# PprY
+read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file PprY_cds.fasta --identity_cutoff 90 --window_size 12  --Ymax 700 --cds_Yaxis 85    --figsize_W 3.5 --figsize_H 1.75 --Xlabel "Ppr-Y CDS position (bp)"  --cds_file PprY_exon_boundaries.txt  --output  Fig2_PprY_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2   
 
-# attempt2: increase Ymax, --cds_Yaxis to put exons at the top of the figure ,will need Illkustrrator edition (save in svg) 
-read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file kl5_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix ONT --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"  --cds_file kl5_exon_boundaries.txt  --Ymax 170 --cds_Yaxis 90  --output kl5_cds_coverage_smoothed12_ONT_19jun2025_edited.svg
-rm *.idx  *.log *.aln  debug_log.txt CDS_coverage_systat*
+# CCY
+read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file CCY_cds.fasta --identity_cutoff 90 --window_size 12  --Ymax 90 --cds_Yaxis 85    --figsize_W 3.5 --figsize_H 1.75 --Xlabel "CCY CDS position (bp)"  --cds_file CCY_exon_boundaries.txt  --output  Fig2_CCY_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2   
 
+# Pp1Y1
+read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file Pp1-Y1_cds.fasta --identity_cutoff 90 --window_size 12  --Ymax 200    --figsize_W 3.5 --figsize_H 1.75 --Xlabel "Pp1-Y1 CDS position (bp)"    --output  Fig2_Pp1Y1_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2   
 
-#######################   Figure 2 ORY ##################
-
-ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/intron_locations/ORY/ORY_exon_boundaries.txt
-ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/reviewer1/point2_Fig3/ORY_cds.fasta
-
-
-# I will make two variations: exons in the top (as above) and exons in the bottom. 
-# top
-read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file ORY_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix ONT --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"  --cds_file ORY_exon_boundaries.txt  --Ymax 150 --cds_Yaxis 90  --output ORY_cds_coverage_smoothed12_ONT_19jun2025_top_edited.svg
-# bottom
-read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file ORY_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix ONT --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"  --cds_file ORY_exon_boundaries.txt     --output ORY_cds_coverage_smoothed12_ONT_19jun2025_bottom.png
-rm *.idx  *.log *.aln  debug_log.txt CDS_coverage_systat*
-# ANSWER: perhaps top is better , to leave all figures with the smae visual lgg
-
-#######################   Figure 2 PprY ##################
-
-ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/intron_locations/PprY/PprY_exon_boundaries.txt
-ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/reviewer1/point2_Fig3/PprY_cds.fasta
-# top
-read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file PprY_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix ONT --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"  --cds_file PprY_exon_boundaries.txt  --Ymax 700 --cds_Yaxis 90  --output PprY_cds_coverage_smoothed12_ONT_19jun2025_edited.svg
-
-#######################   Figure 2 CCY ##################
-
-ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/intron_locations/CCY/CCY_exon_boundaries.txt
-ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/reviewer1/point2_Fig3/CCY_cds.fasta
-# top
-read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file CCY_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix ONT --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"  --cds_file CCY_exon_boundaries.txt  --Ymax 80 --cds_Yaxis 90  --output CCY_cds_coverage_smoothed12_ONT_19jun2025_edited.svg
+# Pp1Y2
+read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file Pp1-Y2_cds.fasta --identity_cutoff 90 --window_size 12  --Ymax 150    --figsize_W 3.5 --figsize_H 1.75 --Xlabel "Pp1-Y2 CDS position (bp)"    --output  Fig2_Pp1Y2_25aug2025.svg  --exon_fontsize 8  --axes_fontsize 8 --label_fontsize 10 --exon_linewd 1.2   
 
 
-#######################   Figure 2 Pp1Y1 ##################
-ln -s ~/projects/mel_Y/assembly_evaluation/XY_coverage/Pp1Y1/Pp1-Y1_cds.fasta
-
-read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file Pp1-Y1_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix ONT_19jun2025 --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"    --Ymax 200     
-
-
-#######################   Figure 2 Pp1Y2 ##################
-ln -s /home6/bernardo/projects/mel_Y/assembly_evaluation/XY_coverage/assembly/Pp1Y2/Pp1-Y2_cds.fasta
-read_coverage_CDS_v6.py --blast_pgm wu --db 282_929_930_1k_porechop_WU --fasta_file Pp1-Y2_cds.fasta --identity_cutoff 90 --window_size 12 --graph_name_suffix ONT_19jun2025 --figsize_W 6 --figsize_H 3 --Xlabel "CDS position (bp)"    --Ymax 150     
-
-
-rm *.idx  *.log *.aln  debug_log.txt CDS_coverage_systat*
-
+rm    CDS_coverage_systat*
 }
 
-step=Figure 3 10jun2025
+step=Figure 3 26aug2025
 {
 # Release6 is a composite including RT-PCR sequence, so it is unreliable to get exon_boundaores etc
 # We obtained the approximate exon boundaries by doing a blastN search of the CDS againd a database of Nanopore reads
-
-
-cd ~/projects/mel_Y/assembly_evaluation/XY_coverage/reviewer1/point2_Fig3
-# getting the fasta links:
-
-
-
-
-
 
 
 # I will use the previously prepared map files (produced by the censor program) .  
@@ -145,225 +101,42 @@ ORY_exon_boundaries.txt
 PprY_exon_boundaries.txt
 
 
+# CCY_exon2
+visualize_repeats_censor5.py --censor  CCYexon2_13reads_mmplain1_stage1.racon1.fasta.map --min_repeat_len  0 --gene_color black --cds_file CCY_exon2_locations_gene_region.txt --len_graph 100001 --len 98042 --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_background --output Fig3_CCY_exon2_27ago2025.svg 
 
+# kl5_exon14
+visualize_repeats_censor5.py --censor kl5_exon13_7feb2025.racon.fasta.map --min_repeat_len  0  --gene_color black --cds_file kl5_exon14_locations_gene_region.txt --len_graph 100001 --len 32405 --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_scale  --no_background  --output Fig3_kl5_exon14_27ago2025.svg 
 
-##################### CCY  10jun2025  #####################
 
+# kl5_exon3_10
+visualize_repeats_censor5.py --censor kl5_exon3_9_9jan2025.racon.fasta.map --min_repeat_len  0  --gene_color black --cds_file kl5_exon_3_10_locations_gene_region.txt --len_graph 100001 --len 12473 --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_scale  --no_background  --output Fig3_kl5_exon3_10_27ago2025.svg 
 
-bl2seq -p blastn -i CCY_cds.fasta  -j CCYexon2_13reads_mmplain1_stage1.racon1.fasta -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n | sed '/#/d' | awk '{print $0 "\t" NR}' 
-# CCY-RB_cds      CCYexon2_assembly_racon 100.00  158     0       0       1072    1229    21404   21561   1e-86    313    1
-cat  CCY_exon_boundaries.txt
-# 1 1071 1
-# 1072 1229 2
-# 1227 3880 3
-# 3880 4002 4
+# kl3_exon15_16
+visualize_repeats_censor5.py --censor kl3_region1_10jan2025.racon.fasta.map --min_repeat_len  0  --gene_color black --cds_file kl3_exon_15_16_locations_gene_region.simple2.txt --len_graph 100001 --len 28613 --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_scale  --no_background  --output Fig3_kl3_exon15_16_27ago2025.svg 
 
-echo "21404   21561  2" > CCY_exon2_locations_gene_region.txt
+# ORY_exon1_2
+visualize_repeats_censor5.py --censor ORY_exon1_2_10jan2025.racon.fasta.map --min_repeat_len  0  --gene_color black --cds_file ORY_exon1_2_locations_gene_region.simple2.txt --len_graph 100001 --len 53956 --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_scale  --no_background  --output Fig3_ORY_exon1_2_27ago2025.svg 
 
 
-# run visualize_repeats_censor4.py 
+# PprY_exon3
+visualize_repeats_censor5.py --censor PprY_exon3_10jan2025.racon.fasta.map --min_repeat_len  0  --gene_color black --cds_file PprY_exon3_locations_gene_region.txt   --len 38049 --len_graph 100001   --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_scale  --no_background  --output Fig3_PprY_exon3_27ago2025.svg 
 
-fasta_size.awk CCYexon2_13reads_mmplain1_stage1.racon1.fasta # 98042
 
-visualize_repeats_censor4.py --censor ./CCYexon2_13reads_mmplain1_stage1.racon1.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file CCY_exon2_locations_gene_region.txt --len_graph 100001 --len 98042  --output CCY_exon2_gene_region_10jun2025.png  --scale_fontsize 10 --exon_fontsize 10
+# Pp1Y1
+visualize_repeats_censor5.py --censor Pp1Y1_ctg239_14jun24_350_450.fasta.map --min_repeat_len  0  --gene_color black --cds_file Pp1Y1_exon_locations_gene_region.txt  --len 100001   --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_scale  --no_background  --output Fig3_Pp1Y1_27ago2025.svg 
 
+# Pp1Y2
+visualize_repeats_censor5.py --censor Pp1Y2_ctg246_14jun24_128_228.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file Pp1Y2_exon_locations_gene_region.txt --len 100001   --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_scale  --no_background  --output Fig3_Pp1Y2_27ago2025.svg 
 
+# PprY_exon4
+visualize_repeats_censor5.py --censor PprY_exon4_ctg166_flyehq2_130_245.fasta.map --min_repeat_len  0  --gene_color black --cds_file PprY_exon4_locations_gene_region.simple2.txt   --len 115001   --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_scale  --no_background  --output Fig3_PprY_exon4_27ago2025.svg 
 
 
+# kl5_exon11_13
+visualize_repeats_censor5.py --censor kl5_exon10_12_ctg33_hq2.fasta.map --min_repeat_len  0  --gene_color black --cds_file kl5_exon_11_13_locations_gene_region.txt   --len 132946   --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_scale  --no_background  --output Fig3_kl5_exon11_13_27ago2025.svg 
 
-##################### kl5 exon 3-10    10jun2025  #####################     
-
-fasta_size.awk kl5_exon3_9_9jan2025.racon.fasta #  12473
-
-bl2seq -p blastn -i kl5_cds.fasta -j kl5_exon3_9_9jan2025.racon.fasta -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n | sed /#/d | awk '{print $0 "\t" NR+2}' > kl5cds_exon3_10region.bls
-cat kl5cds_exon3_10region.bls
-kl-5-RC_cds     kl5_exon3_9_9jan2025_racon      100.00  175     0       0       129     303     5314    5488    4e-97    347    3
-kl-5-RC_cds     kl5_exon3_9_9jan2025_racon      100.00  261     0       0       304     564     5544    5804    2e-148   517    4
-kl-5-RC_cds     kl5_exon3_9_9jan2025_racon      100.00  341     0       0       563     903     5860    6200    0.0      676    5
-kl-5-RC_cds     kl5_exon3_9_9jan2025_racon      100.00  267     0       0       903     1169    6257    6523    6e-152   529    6
-kl-5-RC_cds     kl5_exon3_9_9jan2025_racon      99.82   570     0       1       1170    1738    6580    7149    0.0     1114    7
-kl-5-RC_cds     kl5_exon3_9_9jan2025_racon      100.00  113     0       0       1738    1850    7206    7318    4e-60    224    8
-kl-5-RC_cds     kl5_exon3_9_9jan2025_racon      100.00  292     0       0       1851    2142    7370    7661    7e-167   579    9
-kl-5-RC_cds     kl5_exon3_9_9jan2025_racon      100.00  156     0       0       2142    2297    7719    7874    1e-85    309    10
-
-
-awk '{print $9 "\t" $10 "\t" $13}' kl5cds_exon3_10region.bls > kl5_exon_3_10_locations_gene_region.txt
-
-# I will use SVG format output because we will need to edit (exon numbers are superposed))
- 
- visualize_repeats_censor4.py --censor kl5_exon3_9_9jan2025.racon.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file kl5_exon_3_10_locations_gene_region.txt --len_graph 100001 --len 12473   --output kl5_exon3_10_gene_region_10jun2025.svg   --scale_fontsize 10 --exon_fontsize 10
-
-##################### kl5  exon_14   10jun2025 / 12jun2025  #####################     
-
-fasta_size.awk kl5_exon13_7feb2025.racon.fasta #  32405
-
-bl2seq -p blastn -i kl5_cds.fasta -j kl5_exon13_7feb2025.racon.fasta -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n | sed /#/d | awk '{print $0 "\t" NR}' 
-# kl-5-RC_cds     kl5_exon13_7feb2025_racon       99.94   1674    1       0       6387    8060    18904   17231   0.0     3311    1
-
-echo -e "18904   17231 14"  > kl5_exon14_locations_gene_region.txt
-
-
-visualize_repeats_censor4.py --censor kl5_exon13_7feb2025.racon.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file kl5_exon14_locations_gene_region.txt --len_graph 100001 --len 32405   --output kl5_exon14_gene_region_12jun2025.png --scale_fontsize 10 --exon_fontsize 10
-
-############ kl5 exon  exon   11_13    10jun2025  #####################   
-fasta_size.awk ctg33_hq2.fasta #  132946
-
-
-bl2seq -p blastn -i kl5_cds.fasta -j ctg33_hq2.fasta  -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n | sed /#/d | awk '{print $0 "\t" NR+10}' > kl5cds_exon11_13_region.bls
-cat kl5cds_exon11_13_region.bls
-kl-5-RC_cds     gi|33   100.00  831     0       0       2297    3127    103284  104114  0.0     1647    11
-kl-5-RC_cds     gi|33   100.00  454     0       0       3127    3580    104170  104623  0.0      900    12
-kl-5-RC_cds     gi|33   100.00  2810    0       0       3578    6387    104667  107476  0.0     5570    13
-
-awk '{print $9 "\t" $10 "\t" $13}' kl5cds_exon11_13_region.bls > kl5_exon_11_13_locations_gene_region.txt
-# svg output (needs editing)
-
-visualize_repeats_censor4.py --censor kl5_exon10_12_ctg33_hq2.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file kl5_exon_11_13_locations_gene_region.txt   --len 132946   --output kl5_exon11_13_gene_region_10jun2025_edited.svg --scale_fontsize 10 --exon_fontsize 10
-
- 
- ############   kl3 exon 15-16     10jun2025  #####################   
-cat  kl3_RC_exon_boundaries.txt
-
-10056 12931 15
-12929 13110 16
-13110 13782 17
-
-fasta_size.awk  kl3_region1_10jan2025.racon.fasta  #   28613
-
-
-bl2seq -p blastn -i kl3_cds.fasta -j kl3_region1_10jan2025.racon.fasta   -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n | sed /#/d | awk '{print $0 "\t" NR+14}' > kl3_exon15_16_region.bls
-cat kl3_exon15_16_region.bls
-
-kl-3-RC_cds     kl3_region1_10jan2025_racon     100.00  2876    0       0       10056   12931   3570    695     0.0     5701    15
-kl-3-RC_cds     kl3_region1_10jan2025_racon     100.00  66      0       0       10056   10121   10085   10020   1e-31    131    p15
-kl-3-RC_cds     kl3_region1_10jan2025_racon     98.48   66      0       1       10056   10121   23642   23578   7e-27    115    p15
-kl-3-RC_cds     kl3_region1_10jan2025_racon     98.48   66      1       0       10056   10121   7797    7732    3e-29    123    p15
-kl-3-RC_cds     kl3_region1_10jan2025_racon     98.90   182     0       1       12929   13110   642     463     3e-94    339    16
-
-awk '{print $9 "\t" $10 "\t" $13}' kl3_exon15_16_region.bls > kl3_exon_15_16_locations_gene_region.txt
-
-sed 's/p.*/\./'  kl3_exon_15_16_locations_gene_region.txt >  kl3_exon_15_16_locations_gene_region.simple2.txt
-
-visualize_repeats_censor4.py --censor kl3_region1_10jan2025.racon.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file kl3_exon_15_16_locations_gene_region.simple2.txt   --len 28613  --len_graph 100001   --output kl3_exon15_16_gene_region_10jun2025_edited.svg --scale_fontsize 10 --exon_fontsize 10
-
-
-
-##################### ORY exon 1 2 10jun2025  #####################  
-cat ORY_exon_boundaries.txt
-1 165 1
-162 512 2
-513 1136 3
-1137 1453 4
-1452 1632 5
-1633 2276 6
-2277 2415 7
-2414 2745 8
-
-fasta_size.awk ORY_exon1_2_10jan2025.racon.fasta  #  53956
-
-
-bl2seq -p blastn -i ORY_cds.fasta -j ORY_exon1_2_10jan2025.racon.fasta  -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n  -k 9,9n | sed /#/d | awk '{print $0 "\t" NR}' > ORY_exon1_2_region.bls
-cat ORY_exon1_2_region.bls
-
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     99.39   165     1       0       1       165     3541    3377    9e-89    319    1
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     97.37   38      0       1       1       38      37885   37849   1e-10   60.0    p1
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     100.00  165     0       0       1       165     42733   42569   4e-91    327    1
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     95.86   169     3       3       1       165     46974   46806   3e-70    258    p1
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     100.00  68      0       0       98      165     37806   37739   3e-33    135    p1
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     99.43   351     2       0       162     512     3313    2963    0.0      680    2
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     99.72   351     1       0       162     512     42505   42155   0.0      688    2
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     99.43   352     1       1       162     512     46742   46391   0.0      674    p2
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     100.00  62      0       0       179     240     37671   37610   1e-29    123    p2
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     100.00  34      0       0       233     266     4854    4821    5e-13   67.9    p2
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     100.00  22      0       0       348     369     4752    4731    8e-06   44.1    p2
-ORY-RD_cds      ORY_exon1_2_10jan2025_racon     98.15   54      1       0       375     428     37531   37478   2e-22   99.6    p2
-# I used vim to glue above
-
-
-awk '{print $9 "\t" $10 "\t" $13}' ORY_exon1_2_region.bls > ORY_exon1_2_locations_gene_region.txt
-# I will simplify it, got  too clutered 
-
-sed 's/p.//g'  ORY_exon1_2_locations_gene_region.txt  > ORY_exon1_2_locations_gene_region.simple2.txt
-
-visualize_repeats_censor4.py --censor ORY_exon1_2_10jan2025.racon.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file ORY_exon1_2_locations_gene_region.simple2.txt   --len 53956 --len_graph 100001  --output ORY_exon1_2_gene_region_10jun2025_edited.svg --scale_fontsize 10 --exon_fontsize 10
-
-
-
-##################### PprY exon 3  10jun2025  #####################
- cat PprY_exon_boundaries.txt
-1 208 1
-209 492 2
-493 671 3
-672 1249 4
-1246 1583 5
-1582 1710 6
-
-fasta_size.awk PprY_exon3_10jan2025.racon.fasta  #  38049
-
-bl2seq -p blastn -i PprY_cds.fasta -j PprY_exon3_10jan2025.racon.fasta  -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n  -k 9,9n | sed /#/d | awk '{print $0 "\t" NR}' > PprY_exon3_region.bls
-cat PprY_exon3_region.bls
-# Ppr-Y-RB_cds    PprY_exon3_10jan2025_racon      100.00  179     0       0       493     671     7236    7414    7e-100   355    1
-
-
-echo "7236    7414 3" > PprY_exon3_locations_gene_region.txt
-
-
-visualize_repeats_censor4.py --censor PprY_exon3_10jan2025.racon.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file PprY_exon3_locations_gene_region.txt   --len 38049 --len_graph 100001  --output PprY_exon3_gene_region_10jun2025.png  --scale_fontsize 10 --exon_fontsize 10
-
-##################### PprY exon 4  10jun2025  #####################
- 
-fasta_size.awk  ctg166_flyehq2_130_245.fasta  #  115001
-
-bl2seq -p blastn -i PprY_cds.fasta -j  ctg166_flyehq2_130_245.fasta  -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n  -k 9,9n | sed /#/d | awk '{print $0 "\t" NR}' > PprY_exon4_region.bls
-cat PprY_exon4_region.bls
-# Ppr-Y-RB_cds    gi|166:130000-245000    99.83   579     0       1       672     1249    31333   30755   0.0     1132    p4
-# Ppr-Y-RB_cds    gi|166:130000-245000    100.00  578     0       0       672     1249    86977   87554   0.0     1146    4
-
-echo -e "31333   30755  \n86977   87554 4" > PprY_exon4_locations_gene_region.simple2.txt
-visualize_repeats_censor4.py --censor PprY_exon4_ctg166_flyehq2_130_245.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file PprY_exon4_locations_gene_region.simple2.txt   --len 115001  --output PprY_exon4_gene_region_10jun2025.png  --scale_fontsize 10 --exon_fontsize 10
-
-##################### Pp1Y1  10jun2025  #####################
-fasta_size.awk  ctg239_14jun24_350_450.fasta  #  100001
-
-bl2seq -p blastn -i Pp1Y1_cds.fasta -j  ctg239_14jun24_350_450.fasta  -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n  -k 9,9n | sed /#/d | awk '{print $0 "\t" NR}' > Pp1Y1_region.bls
-cat Pp1Y1_region.bls
-# Pp1-Y1-RC_cds   gi|239:350000-450000    100.00  954     0       0       1       954     49417   48464   0.0     1891    1
-
-echo   "49417   48464 1" > Pp1Y1_exon_locations_gene_region.txt
-
-visualize_repeats_censor4.py --censor Pp1Y1_ctg239_14jun24_350_450.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file Pp1Y1_exon_locations_gene_region.txt   --len 100001  --output Pp1Y1_gene_region_10jun2025.png  --scale_fontsize 10 --exon_fontsize 10
-
-##################### Pp1Y2  10jun2025  #####################
-fasta_size.awk  ctg246_14jun24_128_228.fasta  #  100001
-
-bl2seq -p blastn -i Pp1Y2_cds.fasta -j ctg246_14jun24_128_228.fasta  -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n  -k 9,9n | sed /#/d | awk '{print $0 "\t" NR}' > Pp1Y2_region.bls
-cat Pp1Y2_region.bls
-# Pp1-Y2-RC_cds   gi|246:128000-228000    100.00  942     0       0       1       942     50870   51811   0.0     1867    1
-echo   "50870   51811 1" > Pp1Y2_exon_locations_gene_region.txt
-
-visualize_repeats_censor4.py --censor Pp1Y2_ctg246_14jun24_128_228.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file Pp1Y2_exon_locations_gene_region.txt   --len 100001  --output Pp1Y2_gene_region_10jun2025.png  --scale_fontsize 10 --exon_fontsize 10
-
-
-##################### white  10jun2025  #####################
-fasta_size.awk white_ctg72_flyehq2_19216_19316.fasta  #  100001
-
-bl2seq -p blastn -i white_cds.fasta -j white_ctg72_flyehq2_19216_19316.fasta  -F F -e 0.001 -W 16 -D 2 | sort -k 7,7n  -k 9,9n | sed /#/d | awk '{print $0 "\t" NR}' > white_region.bls
-cat white_region.bls
-w-RA_cds        gi|72:19216000-19316000 100.00  73      0       0       1       73      50007   50079   4e-36    145    1
-w-RA_cds        gi|72:19216000-19316000 100.00  274     0       0       73      346     53187   53460   5e-156   543    2
-w-RA_cds        gi|72:19216000-19316000 100.00  656     0       0       346     1001    53534   54189   0.0     1300    3
-w-RA_cds        gi|72:19216000-19316000 100.00  316     0       0       1002    1317    54251   54566   0.0      626    4
-w-RA_cds        gi|72:19216000-19316000 100.00  135     0       0       1317    1451    54769   54903   4e-73    268    5
-w-RA_cds        gi|72:19216000-19316000 100.00  615     0       0       1450    2064    54972   55586   0.0     1219    6
-
-#getting exon boundaries   
-awk '($13 !~/p/){print $7 "\t" $8 "\t" $13}' white_region.bls > white_exon_boundaries.txt
-#getting exon locations in the gene region, for   visualize_repeats_censor3.py     
-awk '{print $9 "\t" $10 "\t" $13}' white_region.bls > white_exon_locations_gene_region.txt	
-
-# saving in svg to edit
-
-visualize_repeats_censor4.py --censor white_ctg72_flyehq2_19216_19316.fasta.map --min_repeat_len  0  --gene_regex Ycds --gene_color black --cds_file white_exon_locations_gene_region.txt   --len 100001  --output white2_gene_region_10jun2025.svg  --scale_fontsize 10 --exon_fontsize 10
+# white
+visualize_repeats_censor5.py --censor white_ctg72_flyehq2_19216_19316.fasta.map --min_repeat_len  0  --gene_color black --cds_file white_exon_locations_gene_region.txt   --len 100001   --figsize_W 4.9 --figsize_H_nodepth 1.15  --exon_fontsize 8 --scale_fontsize 8 --no_scale  --no_background  --output Fig3_white_27ago2025.svg 
 
 
 }
@@ -385,8 +158,10 @@ step=Figure 5  20jun2025
 
 step=Figure 6  22feb2025
 {
-fplot_reads.awk   Fig6_data.txt  # produced file  Fig6_data.svg . This will print the arrows, whcih represent the reads
-# the central part showing the satellites, exon, and TEs came from Fig. 3
+fplot_reads.awk   Fig6_data.txt  # produced file  Fig6_data.svg . This will print the arrows, which represent the reads
+# the central part showing the satellites, exon, and TEs:
+visualize_repeats_censor5.py --censor PprY_exon3_10jan2025.racon.fasta.map --min_repeat_len  0  --gene_color red --cds_file PprY_exon3_locations_gene_region.txt   --len 38049 --len_graph 40001   --figsize_W 7 --figsize_H_nodepth 1.6  --exon_fontsize 10 --scale_fontsize 10 --no_background  --output Fig6_PprY_exon3_7inches.svg 
+
 }
 
 
@@ -452,8 +227,9 @@ missingExon_binomial_stat_v1.py    lowcov_start_seq_24jun2025.data
 step= Table 3   
 { 
 
-simple_satellite_detector.py --input_file CCY_exon2_13reads.fasta --satellite AAAC --min_copies 4 --output CCY_exon2_13reads_AAAC_mincopy1.txt
-# repeat the above script for each combination of fasta sequence and main satellite
+find_tandem_repeats_v2.py    allreads.ORY_exon_1-2.fasta  --min_tandem_copies_block 4   --min_tandem_copies_summary 50 --print_mode summary
+
+# repeat the above script for each fasta file
 
 }
 
